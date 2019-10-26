@@ -155,16 +155,19 @@ def edit_info(dictionary):
         print("The specified date does not exist in the dictionary.")
 
 
-if os.path.exists("electricity_data.bak") and os.path.exists("electricity_data.dir") and os.path.exists(
-        "electricity_data.dat"):
+if os.path.exists(r".\electricity_data") and os.path.exists(
+        r".\electricity_data\electricity_data.bak") and os.path.exists(
+        r".\electricity_data\electricity_data.dir") and os.path.exists(r".\electricity_data\electricity_data.dat"):
     print("\nElectricity data is read.")
-    shelf = shelve.open("electricity_data")
+    shelf = shelve.open(r".\electricity_data\electricity_data")
     # electricity = (year, month): [kW, yen]
     electricity = shelf["electricity"]
 # When shelve files don't exist, create new ones.
 else:
     print("\nElectricity data is newly created.")
-    shelf = shelve.open("electricity_data")
+    # Create a child folder.
+    os.makedirs(r".\electricity_data")
+    shelf = shelve.open(r".\electricity_data\electricity_data")
     electricity = {}
     shelf["electricity"] = electricity
 # User terminal to receive primary user inputs
