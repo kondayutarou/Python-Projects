@@ -1,10 +1,18 @@
+# python 3
+# An electricity calculator for adding, editing, saving, displaying electricity information at user's request
 import shelve
+import os
 
-print("\nElectricity_data is read.")
-shelf = shelve.open("electricity_data")
-# (year, month): [kW, yen]
-electricity = {(2019, 6): [112, 3423], (2019, 7): [105, 3259], (2019, 8): [124, 3664], (2019, 9): [194, 5541],
-               (2019, 10): [117, 3176]}
+print("\nElectricity data is read.")
+if os.path.exists("electricity_data.bak") and os.path.exists("electricity_data.dir") and os.path.exists(
+        "electricity_data.dat"):
+    shelf = shelve.open("electricity_data")
+    # electricity = (year, month): [kW, yen]
+    electricity = shelf["electricity"]
+else:
+    shelf = shelve.open("electricity_data")
+    electricity = {}
+    shelf["electricity"] = electricity
 
 
 def month_name(date):
@@ -109,6 +117,7 @@ def append_info(dictionary):
     year = input_integer_determiner()
     print("Input month:")
     month = input_integer_determiner()
+    # Check if the input date actually exists in dictionary.
     date_search(year, month, dictionary)
     print("Input electricity usage (kW):")
     usage = input_integer_determiner()
@@ -122,6 +131,7 @@ If yes, input "y", otherwise, input any other string.
     confirmation = input("> ")
     if confirmation.lower() == "y":
         dictionary[(year, month)] = [usage, bill]
+        print("Change reflected.")
 
 
 def edit_info(dictionary):
@@ -135,12 +145,12 @@ def edit_info(dictionary):
         # Retrieve and display the relevant value from the dictionary.
         print("Electricity usage and bill for the specified date:")
         print(f"{dictionary[(year, month)][0]} kW for {dictionary[(year, month)][1]} yen.\n")
-    # Prompt a user to input electricity usage and bill for the date.
+        # Prompt a user to input electricity usage and bill for the date.
         print("Input new electricity usage")
         usage = input_integer_determiner()
         print("Input new electricity bill")
         bill = input_integer_determiner()
-    # Confirm the user on the change.
+        # Confirm the user on the change.
         print('Do you wish to make the following change? If yes, input "y", otherwise, input any other key.')
         print(f"\tYou used {usage} kW for {bill} yen.\n")
         if input("> ").lower() == "y":
