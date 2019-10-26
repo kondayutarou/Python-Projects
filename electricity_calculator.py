@@ -1,18 +1,11 @@
-# python 3
+#!/usr/bin/env python3
 # An electricity calculator for adding, editing, saving, displaying electricity information at user's request
 import shelve
 import os
+import logging
 
-print("\nElectricity data is read.")
-if os.path.exists("electricity_data.bak") and os.path.exists("electricity_data.dir") and os.path.exists(
-        "electricity_data.dat"):
-    shelf = shelve.open("electricity_data")
-    # electricity = (year, month): [kW, yen]
-    electricity = shelf["electricity"]
-else:
-    shelf = shelve.open("electricity_data")
-    electricity = {}
-    shelf["electricity"] = electricity
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.debug('Start of program')
 
 
 def month_name(date):
@@ -135,12 +128,14 @@ If yes, input "y", otherwise, input any other string.
 
 
 def edit_info(dictionary):
+    logging.debug("start of edit_info")
     print("Navigate to a piece of information you want to change.")
     print("Input year:")
     year = input_year_determiner()
     print("Input month:")
     month = input_month_determiner()
     # For checking whether the input date already exists in dictionary.
+    logging.debug(f"check if {(year, month)} in {list(dictionary.keys())}")
     if (year, month) in dictionary.keys():
         # Retrieve and display the relevant value from the dictionary.
         print("Electricity usage and bill for the specified date:")
@@ -160,6 +155,19 @@ def edit_info(dictionary):
         print("The specified date does not exist in the dictionary.")
 
 
+if os.path.exists("electricity_data.bak") and os.path.exists("electricity_data.dir") and os.path.exists(
+        "electricity_data.dat"):
+    print("\nElectricity data is read.")
+    shelf = shelve.open("electricity_data")
+    # electricity = (year, month): [kW, yen]
+    electricity = shelf["electricity"]
+# When shelve files don't exist, create new ones.
+else:
+    print("\nElectricity data is newly created.")
+    shelf = shelve.open("electricity_data")
+    electricity = {}
+    shelf["electricity"] = electricity
+# User terminal to receive primary user inputs
 while True:
     print(f"""
 Type "a" to add information to electricity data.
