@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 import logging
 
 
@@ -25,7 +24,7 @@ N: No assignee
 
 
 def term():
-    print("Input a term to look up:")
+    print('Input a term to look up: ')
     ui = input("> ")
     return "\"" + ui + "\"" + " "
 
@@ -47,7 +46,7 @@ browser = webdriver.Firefox(executable_path=r'C:\geckodriver\geckodriver.exe')
 patent_search(assignee)
 # From second tab onwards
 while True:
-    browser.execute_script('''window.open('{}');'''.format("about:blank"))
+    browser.execute_script('window.open()')
     new_win = browser.window_handles[-1]
     browser.switch_to.window(new_win)
     patent_search(assignee)
